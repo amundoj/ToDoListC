@@ -1,0 +1,62 @@
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# User-specific files (Mono auto generated)
+mono_crash.*
+
+# Mono auto generated
+mono_crash.*
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+# Archive builds and packed NuGet
+*.zip
+*.7z
+*.tar.gz
+*.tar.bz2
+*.tar.bz2
+*.rar
+*.pkg
+*.nupkg
+*.snupkg
+
+# DotNetCore template files
+.dotnet/
+
+# OS generated files #
+######################
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# NPM Packages
+node_modules/
+npm-debug.log*
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# .NET Core Test Results
+TestResults/
+
+
