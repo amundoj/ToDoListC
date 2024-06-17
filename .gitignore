@@ -40,7 +40,7 @@ bld/
 .dotnet/
 
 # OS generated files #
-######################
+#
 .DS_Store
 Thumbs.db
 ehthumbs.db
