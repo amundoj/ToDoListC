@@ -59,4 +59,4 @@ artifacts/
 # .NET Core Test Results
 TestResults/
 
-
+/ToDoListApp.sln
