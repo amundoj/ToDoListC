@@ -9,25 +9,26 @@ namespace ToDoListApp
         Medium,
         Low
     }
+
     // Task class to represent each to-do item
     class Task
     {
         public string Description { get; set; }
         public bool IsCompleted { get; set; }
-        public DateTime DueDate { get; set; }
-        public Priority TaskPriority { get; set;}
+        public DateTime Deadline { get; set; }
+        public Priority TaskPriority { get; set; }
 
-        public Task(string description, DateTime dueDate, Priority priority)
+        public Task(string description, DateTime deadline, Priority priority)
         {
             Description = description ?? throw new ArgumentNullException(nameof(description));
             IsCompleted = false;
-            DueDate = dueDate;
+            Deadline = deadline;
             TaskPriority = priority;
         }
 
         public override string ToString()
         {
-            return $"{Description} (Due: {DueDate.ToShortDateString()}, Priority {TaskPriority}) - {(IsCompleted ? "Completed" : "Pending")}";
+            return $"{Description} (Due: {Deadline.ToString("MM-dd-yyyy HH:mm")}, Priority: {TaskPriority}) - {(IsCompleted ? "Completed" : "Pending")}";
         }
     }
 
@@ -93,21 +94,30 @@ namespace ToDoListApp
                 return;
             }
 
-            Console.WriteLine("Enter the du date (mm-dd-yyyy)");
+            Console.Write("Enter the deadline date (MM-dd-yyyy): ");
             if (!DateTime.TryParse(Console.ReadLine(), out DateTime dueDate))
             {
                 Console.WriteLine("Invalid date format. Please try again.");
                 return;
             }
 
-            Console.WriteLine("Enter the priority (High, Medium, Low): ");
-            if (!Enum.TryParse(Console.ReadLine(), true, out Priority priority))
+            Console.Write("Enter the deadline time (HH:mm): ");
+            if (!TimeSpan.TryParse(Console.ReadLine(), out TimeSpan time))
             {
-                Console.WriteLine("Invalid priority. Please try again");
+                Console.WriteLine("Invalid time format. Please try again.");
                 return;
             }
 
-            Task newTask = new Task(description, dueDate, priority);
+            DateTime deadline = dueDate.Date.Add(time);
+
+            Console.Write("Enter the priority (High, Medium, Low): ");
+            if (!Enum.TryParse(Console.ReadLine(), true, out Priority priority))
+            {
+                Console.WriteLine("Invalid priority. Please try again.");
+                return;
+            }
+
+            Task newTask = new Task(description, deadline, priority);
             tasks.Add(newTask);
             Console.WriteLine("Task added successfully.");
         }
@@ -138,7 +148,7 @@ namespace ToDoListApp
                 tasks[taskNumber - 1].IsCompleted = true;
                 Console.WriteLine("Task marked as completed.");
             }
-            else 
+            else
             {
                 Console.WriteLine("Invalid task number. Please try again.");
             }
