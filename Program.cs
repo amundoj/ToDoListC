@@ -3,21 +3,31 @@ using System.Collections.Generic;
 
 namespace ToDoListApp
 {
+    enum Priority
+    {
+        High,
+        Medium,
+        Low
+    }
     // Task class to represent each to-do item
     class Task
     {
         public string Description { get; set; }
         public bool IsCompleted { get; set; }
+        public DateTime DueDate { get; set; }
+        public Priority TaskPriority { get; set;}
 
-        public Task(string description)
+        public Task(string description, DateTime dueDate, Priority priority)
         {
             Description = description ?? throw new ArgumentNullException(nameof(description));
             IsCompleted = false;
+            DueDate = dueDate;
+            TaskPriority = priority;
         }
 
         public override string ToString()
         {
-            return $"{Description} - {(IsCompleted ? "Completed" : "Pending")}";
+            return $"{Description} (Due: {DueDate.ToShortDateString()}, Priority {TaskPriority}) - {(IsCompleted ? "Completed" : "Pending")}";
         }
     }
 
@@ -83,7 +93,21 @@ namespace ToDoListApp
                 return;
             }
 
-            Task newTask = new Task(description);
+            Console.WriteLine("Enter the du date (mm-dd-yyyy)");
+            if (!DateTime.TryParse(Console.ReadLine(), out DateTime dueDate))
+            {
+                Console.WriteLine("Invalid date format. Please try again.");
+                return;
+            }
+
+            Console.WriteLine("Enter the priority (High, Medium, Low): ");
+            if (!Enum.TryParse(Console.ReadLine(), true, out Priority priority))
+            {
+                Console.WriteLine("Invalid priority. Please try again");
+                return;
+            }
+
+            Task newTask = new Task(description, dueDate, priority);
             tasks.Add(newTask);
             Console.WriteLine("Task added successfully.");
         }
