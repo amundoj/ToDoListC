@@ -19,7 +19,8 @@ namespace ToDoListApp
                     case "1": taskManager.AddTask(); break;
                     case "2": taskManager.ViewTasks(); break;
                     case "3": taskManager.EditTask(); break;
-                    case "4": exitRequested = true; Console.WriteLine("👋 Exiting application."); break;
+                    case "4": taskManager.DeleteTask(); break;
+                    case "5": exitRequested = true; Console.WriteLine("👋 Exiting application."); break;
                     default: Console.WriteLine("⚠ Invalid choice."); break;
                 }
                 Console.WriteLine();
@@ -32,7 +33,8 @@ namespace ToDoListApp
             Console.WriteLine("1️ Add a task");
             Console.WriteLine("2️ View tasks");
             Console.WriteLine("3️ Edit a task");
-            Console.WriteLine("4️ Exit");
+            Console.WriteLine("4️ Delete a task");
+            Console.WriteLine("5️ Exit");
             Console.Write("Enter your choice: ");
         }
     }

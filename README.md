@@ -1,58 +1,51 @@
-# ToDoListC
+# To-Do List Application
 
-**ToDoListC** is a command-line To-Do List application written in C# that helps you manage your tasks efficiently. This simple yet effective tool allows you to add tasks with deadlines and priorities, view your tasks, mark tasks as completed, and remove tasks—all through an intuitive CLI.
+A simple command-line To-Do List application written in C#. This application allows you to:
 
-## Features
+- Add tasks
+- View tasks
+- Edit tasks
+- Delete tasks
 
-- **Add Task:** Create a new task by providing a description, deadline date & time, and a priority level.
-- **View Tasks:** List all your tasks with details including due date, priority, and completion status.
-- **Mark Task as Completed:** Easily update a task's status once it's finished.
-- **Remove Task:** Delete tasks that are no longer needed.
-- **User-Friendly Interface:** Clear prompts and validations ensure smooth interaction.
+## Database Setup
 
-## Technologies Used
+This application uses a MySQL database to store the tasks.
 
-- **C#**
-- **.NET 8.0**
+### Requirements
 
-## Getting Started
+- MySQL database running locally or on a remote server.
+- .NET SDK (version 6 or above).
 
-### Prerequisites
+### Database Configuration
 
-- [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+The connection string for the database is configured using an environment variable. Make sure to set up the environment variable `DB_PASSWORD` on your system with the correct MySQL password.
 
-### Installation
+#### Setting the Environment Variable
 
-1. **Clone the Repository:**
+**Windows**:
+1. Open PowerShell or Command Prompt.
+2. Run the following:
    ```bash
-   git clone https://github.com/amundoj/ToDoListC.git
-   cd ToDoListC
-2. Build the project:
-dotnet build
-3. Run the application:
-4. dotnet run
+   $env:DB_PASSWORD="your_pword"
 
-Usage
+**Linux/macOS:**
 
-When you run the application, you'll see a menu with these options:
+1. Open a terminal and add the following to your shell configuration file (~/.bashrc or ~/.zshrc):
+    export DB_PASSWORD="your_password"
 
-    Add a new task: Follow the prompts to input a task description, deadline date & time, and priority.
-    View all tasks: Displays a list of your tasks.
-    Mark a task as completed: Update a task's status.
-    Remove a task: Delete a task from your list.
-    Exit: Close the application.
+2. Reload the shell:
+    source ~/.bashrc   # Or ~/.zshrc
 
-Simply enter the number corresponding to the action you want to perform, and follow the on-screen instructions.
-Future Improvements
+### Migrations
 
-    Task Persistence: Save and load tasks from a file (e.g., JSON or XML) to maintain your to-do list between sessions.
-    Sorting and Filtering: Add options to sort tasks by deadline or priority and filter tasks based on their status.
-    Graphical User Interface (GUI): Develop a GUI version using Windows Forms or WPF.
-    Unit Testing: Implement unit tests to ensure code robustness and ease future maintenance.
+After setting up your database, run the following commands to create the required tables:
 
-License
+dotnet ef migrations add InitialCreate
+dotnet ef database update
 
-This project is licensed under the MIT License. See the LICENSE file for details.
-Acknowledgements
+### Running the Application
 
-Thank you for checking out ToDoListC! Feel free to contribute or suggest improvements.
+Clone this repository.
+Set up the environment variable for the database password.
+Run the application:
+dotnet run
