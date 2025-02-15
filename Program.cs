@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace ToDoListApp
 {
+    // Define task priority levels
     enum Priority
     {
         High,
@@ -10,15 +11,15 @@ namespace ToDoListApp
         Low
     }
 
-    // Task class to represent each to-do item
-    class Task
+    // Renamed from "Task" to "TodoTask" to avoid confusion with System.Threading.Tasks.Task
+    class TodoTask
     {
         public string Description { get; set; }
         public bool IsCompleted { get; set; }
         public DateTime Deadline { get; set; }
         public Priority TaskPriority { get; set; }
 
-        public Task(string description, DateTime deadline, Priority priority)
+        public TodoTask(string description, DateTime deadline, Priority priority)
         {
             Description = description ?? throw new ArgumentNullException(nameof(description));
             IsCompleted = false;
@@ -28,26 +29,22 @@ namespace ToDoListApp
 
         public override string ToString()
         {
-            return $"{Description} (Due: {Deadline.ToString("MM-dd-yyyy HH:mm")}, Priority: {TaskPriority}) - {(IsCompleted ? "Completed" : "Pending")}";
+            return $"{Description} (Due: {Deadline:MM-dd-yyyy HH:mm}, Priority: {TaskPriority}) - {(IsCompleted ? "Completed" : "Pending")}";
         }
     }
 
     class Program
     {
-        static List<Task> tasks = new List<Task>();
+        // Use a readonly list to store tasks
+        private static readonly List<TodoTask> tasks = new List<TodoTask>();
 
         static void Main(string[] args)
         {
-            while (true)
+            bool exitRequested = false;
+            while (!exitRequested)
             {
                 ShowMenu();
-                string? choice = Console.ReadLine();
-
-                if (choice == null)
-                {
-                    Console.WriteLine("Invalid choice, please try again.");
-                    continue;
-                }
+                string? choice = Console.ReadLine()?.Trim();
 
                 switch (choice)
                 {
@@ -64,17 +61,23 @@ namespace ToDoListApp
                         RemoveTask();
                         break;
                     case "5":
-                        return; // Exit the application
+                        exitRequested = true;
+                        Console.WriteLine("Exiting application. Goodbye!");
+                        break;
                     default:
                         Console.WriteLine("Invalid choice, please try again.");
                         break;
                 }
+                Console.WriteLine(); // Add a blank line for better readability between actions.
             }
         }
 
-        static void ShowMenu()
+        /// <summary>
+        /// Displays the main menu.
+        /// </summary>
+        private static void ShowMenu()
         {
-            Console.WriteLine("To-Do List Application");
+            Console.WriteLine("=== To-Do List Application ===");
             Console.WriteLine("1. Add a new task");
             Console.WriteLine("2. View all tasks");
             Console.WriteLine("3. Mark a task as completed");
@@ -83,46 +86,56 @@ namespace ToDoListApp
             Console.Write("Enter your choice: ");
         }
 
-        static void AddTask()
+        /// <summary>
+        /// Adds a new task after validating user input.
+        /// </summary>
+        private static void AddTask()
         {
             Console.Write("Enter the task description: ");
             string? description = Console.ReadLine();
-
             if (string.IsNullOrWhiteSpace(description))
             {
                 Console.WriteLine("Task description cannot be empty. Please try again.");
                 return;
             }
 
+            // Get and validate deadline date
             Console.Write("Enter the deadline date (MM-dd-yyyy): ");
-            if (!DateTime.TryParse(Console.ReadLine(), out DateTime dueDate))
+            string? dateInput = Console.ReadLine();
+            if (!DateTime.TryParse(dateInput, out DateTime dueDate))
             {
                 Console.WriteLine("Invalid date format. Please try again.");
                 return;
             }
 
+            // Get and validate deadline time
             Console.Write("Enter the deadline time (HH:mm): ");
-            if (!TimeSpan.TryParse(Console.ReadLine(), out TimeSpan time))
+            string? timeInput = Console.ReadLine();
+            if (!TimeSpan.TryParse(timeInput, out TimeSpan time))
             {
                 Console.WriteLine("Invalid time format. Please try again.");
                 return;
             }
-
             DateTime deadline = dueDate.Date.Add(time);
 
+            // Get and validate priority
             Console.Write("Enter the priority (High, Medium, Low): ");
-            if (!Enum.TryParse(Console.ReadLine(), true, out Priority priority))
+            string? priorityInput = Console.ReadLine();
+            if (!Enum.TryParse(priorityInput, true, out Priority priority))
             {
                 Console.WriteLine("Invalid priority. Please try again.");
                 return;
             }
 
-            Task newTask = new Task(description, deadline, priority);
+            TodoTask newTask = new TodoTask(description, deadline, priority);
             tasks.Add(newTask);
             Console.WriteLine("Task added successfully.");
         }
 
-        static void ViewTasks()
+        /// <summary>
+        /// Displays all current tasks.
+        /// </summary>
+        private static void ViewTasks()
         {
             if (tasks.Count == 0)
             {
@@ -130,18 +143,25 @@ namespace ToDoListApp
                 return;
             }
 
-            Console.WriteLine("Your Tasks:");
+            Console.WriteLine("=== Your Tasks ===");
             for (int i = 0; i < tasks.Count; i++)
             {
                 Console.WriteLine($"{i + 1}. {tasks[i]}");
             }
         }
 
-        static void MarkTaskAsCompleted()
+        /// <summary>
+        /// Marks a specified task as completed.
+        /// </summary>
+        private static void MarkTaskAsCompleted()
         {
-            ViewTasks();
-            if (tasks.Count == 0) return;
+            if (tasks.Count == 0)
+            {
+                Console.WriteLine("No tasks available to mark as completed.");
+                return;
+            }
 
+            ViewTasks();
             Console.Write("Enter the task number to mark as completed: ");
             if (int.TryParse(Console.ReadLine(), out int taskNumber) && taskNumber > 0 && taskNumber <= tasks.Count)
             {
@@ -154,11 +174,18 @@ namespace ToDoListApp
             }
         }
 
-        static void RemoveTask()
+        /// <summary>
+        /// Removes a specified task from the list.
+        /// </summary>
+        private static void RemoveTask()
         {
-            ViewTasks();
-            if (tasks.Count == 0) return;
+            if (tasks.Count == 0)
+            {
+                Console.WriteLine("No tasks available to remove.");
+                return;
+            }
 
+            ViewTasks();
             Console.Write("Enter the task number to remove: ");
             if (int.TryParse(Console.ReadLine(), out int taskNumber) && taskNumber > 0 && taskNumber <= tasks.Count)
             {
