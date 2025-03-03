@@ -11,17 +11,26 @@ namespace ToDoListApp
 
             while (!exitRequested)
             {
-                ShowMenu();
-                string? choice = Console.ReadLine()?.Trim();
-
-                switch (choice)
+                try
                 {
-                    case "1": taskManager.AddTask(); break;
-                    case "2": taskManager.ViewTasks(); break;
-                    case "3": taskManager.EditTask(); break;
-                    case "4": taskManager.DeleteTask(); break;
-                    case "5": exitRequested = true; Console.WriteLine("👋 Exiting application."); break;
-                    default: Console.WriteLine("⚠ Invalid choice."); break;
+                    ShowMenu();
+                    string? choice = Console.ReadLine()?.Trim();
+
+                    switch (choice)
+                    {
+                        case "1": taskManager.AddTask(); break;
+                        case "2": taskManager.ViewTasks(); break; // Viser kun ufullførte som standard
+                        case "3": taskManager.ViewTasks(true); break; // Viser fullførte
+                        case "4": taskManager.EditTask(); break;
+                        case "5": taskManager.MarkTaskAsCompleted(); break;
+                        case "6": taskManager.DeleteTask(); break;
+                        case "7": exitRequested = true; Console.WriteLine("👋 Avslutter applikasjonen."); break;
+                        default: Console.WriteLine("⚠ Ugyldig valg. Velg et tall mellom 1 og 7."); break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"❌ En feil oppstod: {ex.Message}");
                 }
                 Console.WriteLine();
             }
@@ -29,13 +38,15 @@ namespace ToDoListApp
 
         private static void ShowMenu()
         {
-            Console.WriteLine("\n=== 📝 To-Do List Application ===");
-            Console.WriteLine("1️ Add a task");
-            Console.WriteLine("2️ View tasks");
-            Console.WriteLine("3️ Edit a task");
-            Console.WriteLine("4️ Delete a task");
-            Console.WriteLine("5️ Exit");
-            Console.Write("Enter your choice: ");
+            Console.WriteLine("\n=== 📝 To-Do List Applikasjon ===");
+            Console.WriteLine("1️⃣ Legg til en oppgave");
+            Console.WriteLine("2️⃣ Vis ventende oppgaver");
+            Console.WriteLine("3️⃣ Vis fullførte oppgaver");
+            Console.WriteLine("4️⃣ Rediger en oppgave");
+            Console.WriteLine("5️⃣ Marker oppgave som fullført");
+            Console.WriteLine("6️⃣ Slett en oppgave");
+            Console.WriteLine("7️⃣ Avslutt");
+            Console.Write("Velg et alternativ: ");
         }
     }
 }
