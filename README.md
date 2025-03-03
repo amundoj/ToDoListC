@@ -2,50 +2,74 @@
 
 A simple command-line To-Do List application written in C#. This application allows you to:
 
-- Add tasks
-- View tasks
-- Edit tasks
+- Add tasks with descriptions, deadlines, and priorities
+- View pending or completed tasks
+- Edit existing tasks
+- Mark tasks as completed
 - Delete tasks
 
 ## Database Setup
 
-This application uses a MySQL database to store the tasks.
+This application uses a MySQL database to store tasks persistently, managed via Entity Framework Core with the Pomelo MySQL provider.
 
 ### Requirements
 
-- MySQL database running locally or on a remote server.
-- .NET SDK (version 6 or above).
+- MySQL database running locally or on a remote server
+- .NET SDK (version 6 or above)
+- MySQL user with appropriate permissions to create and modify the `todolist` database
 
 ### Database Configuration
 
-The connection string for the database is configured using an environment variable. Make sure to set up the environment variable `DB_PASSWORD` on your system with the correct MySQL password.
+The database connection string is currently hard-coded in `AppDbContext.cs`. Update the connection string in the `OnConfiguring` method with your MySQL credentials:
 
-#### Setting the Environment Variable
+optionsBuilder.UseMySql("server=localhost;database=todolist;user=root;password=YOUR_PASSWORD",
+new MySqlServerVersion(new Version(8, 0, 21)));
 
-**Windows**:
-1. Open PowerShell or Command Prompt.
-2. Run the following:
-   ```bash
-   $env:DB_PASSWORD="your_pword"
 
-**Linux/macOS:**
+#### Optional: Use Environment Variables
 
-1. Open a terminal and add the following to your shell configuration file (~/.bashrc or ~/.zshrc):
-    export DB_PASSWORD="your_password"
+For better security, you can configure the connection string using an environment variable (`DB_PASSWORD`):
 
-2. Reload the shell:
-    source ~/.bashrc   # Or ~/.zshrc
+**Windows (PowerShell):**
 
-### Migrations
+$env:DB_PASSWORD="your_password"
 
-After setting up your database, run the following commands to create the required tables:
+**Linux/macOS (Terminal):**
+Add to `~/.bashrc` or `~/.zshrc`:
+
+export DB_PASSWORD="your_password"
+
+Reload the shell:
+
+source ~/.bashrc  # or ~/.zshrc
+
+Then update `AppDbContext.cs` to use it:
+
+var password = Environment.GetEnvironmentVariable("DB_PASSWORD");
+optionsBuilder.UseMySql($"server=localhost;database=todolist;user=root;password={password}",
+new MySqlServerVersion(new Version(8, 0, 21)));
+
+### Database Initialization
+
+The application uses `EnsureCreated()` to automatically create the `todolist` database and table on first run. Ensure your MySQL user has permissions to create databases. Alternatively, create the database manually:
+
+CREATE DATABASE todolist;
+
+For production use, consider switching to EF Core migrations:
 
 dotnet ef migrations add InitialCreate
 dotnet ef database update
 
 ### Running the Application
 
-Clone this repository.
-Set up the environment variable for the database password.
-Run the application:
-dotnet run
+1. Clone this repository.
+2. Update the MySQL connection string in `AppDbContext.cs` (or set the `DB_PASSWORD` environment variable if implemented).
+3. Build and run the application:
+
+dotnet build todolistc.csproj
+dotnet run --project todolistc.csproj
+
+## Notes
+
+- If the folder contains multiple `.csproj` files, specify the correct one with `--project`.
+- Ensure MySQL is running and accessible before starting the app.
